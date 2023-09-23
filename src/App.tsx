@@ -1,13 +1,21 @@
 import React from "react";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { login } from "./features/auth/authSlice";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
+import Profile from "./pages/profile/Profile";
 
 function App() {
-	const token = useAppSelector(state => state.auth.token);
 	return (
-		<div>
-			<h2>Authentication System</h2>
-		</div>
+		<>
+			<BrowserRouter>
+				<Routes>
+					<Route path="/" element={<Navigate to="/login" replace />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
+					<Route path="/profile" element={<Profile />} />
+				</Routes>
+			</BrowserRouter>
+		</>
 	);
 }
 

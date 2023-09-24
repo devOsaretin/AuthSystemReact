@@ -12,6 +12,10 @@ export interface LoginBody {
 	password: string;
 }
 
+export interface LoginResponse {
+	token?: string;
+}
+
 export interface AuthUser {
 	id: number;
 	firstName: string;
@@ -32,4 +36,9 @@ export interface Photo {
 	url: string;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface ApiError {
+	message?: string;
+	status?: number;
 }

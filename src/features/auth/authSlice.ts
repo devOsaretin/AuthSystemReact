@@ -2,22 +2,24 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AuthUser } from "../../interfaces/authentication";
 import { getAuthUser, login } from "../thunks/auth";
 
+const token = localStorage.getItem("token") ?? null;
+
 interface AuthState {
 	authUser: AuthUser | null;
 	isLoading: boolean;
 	isError: boolean;
-	isSuccess: boolean;
 	errorMessage?: string;
 	isAuthenticated: boolean;
+	token: string | null;
 }
 
 const initialState: AuthState = {
 	authUser: null,
 	isLoading: false,
 	isError: false,
-	isSuccess: false,
 	errorMessage: undefined,
 	isAuthenticated: false,
+	token,
 };
 
 const authSlice = createSlice({
@@ -25,8 +27,13 @@ const authSlice = createSlice({
 	initialState,
 	reducers: {
 		logout(state) {
+			localStorage.removeItem("token");
 			state.authUser = null;
-			sessionStorage.removeItem("token");
+			state.isAuthenticated = false;
+			state.isError = false;
+			state.errorMessage = undefined;
+			state.isLoading = false;
+			state.token = null;
 		},
 	},
 
@@ -47,14 +54,17 @@ const authSlice = createSlice({
 		});
 
 		builder.addCase(getAuthUser.rejected, (state, action) => {
+			localStorage.removeItem("token");
 			state.isLoading = false;
 			state.isError = true;
 			state.isAuthenticated = false;
 			state.errorMessage = action.error.message;
+			state.token = null;
 		});
 
 		builder.addCase(login.fulfilled, (state, action) => {
 			state.isAuthenticated = true;
+			state.token = action.payload;
 			state.errorMessage = undefined;
 			state.isError = false;
 			state.isLoading = false;
@@ -68,7 +78,7 @@ const authSlice = createSlice({
 			state.isLoading = false;
 			state.isError = true;
 			state.isAuthenticated = false;
-			state.errorMessage = action.error.message;
+			state.errorMessage = action.payload as string;
 		});
 	},
 });

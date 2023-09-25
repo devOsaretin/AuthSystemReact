@@ -42,3 +42,12 @@ export interface ApiError {
 	message?: string;
 	status?: number;
 }
+
+export type RegisterFormValues = {
+	email: string;
+	password: string;
+	firstName: string;
+	lastName: string;
+	role: string;
+	files: File[];
+};

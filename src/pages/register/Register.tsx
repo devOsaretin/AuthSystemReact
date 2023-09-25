@@ -6,9 +6,14 @@ import TextInputField from "../../components/input/TextInput/TextInputField";
 import Button from "../../components/input/Button/Button";
 import PasswordInputField from "../../components/input/PasswordField/PasswordInputField";
 import DropZone from "../../components/DropZone/DropZone";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { register as actionRegister } from "../../features/thunks/auth";
 import RegistrationSuccess from "../RegistrationSuccess/RegistrationSuccess";
+import { clearErrors } from "../../features/auth/authSlice";
+import { Link, useLocation } from "react-router-dom";
+import LeftPageBanner from "../../components/commons/LeftPageBanner/LeftPageBanner";
+import Info from "../../components/Feedback/Info/Info";
+import { generateUniqueId } from "../../utils";
 
 type RegisterFormValues = {
 	email: string;
@@ -19,6 +24,7 @@ type RegisterFormValues = {
 };
 type ExtendedFile = File & {
 	thumbnail?: string;
+	id: string;
 };
 
 const schema = yup.object().shape({
@@ -47,11 +53,15 @@ const schema = yup.object().shape({
 
 const Register = () => {
 	const dispatch = useAppDispatch();
+	const location = useLocation();
+
+	const { isLoading: stateLoading, isError, errorMessage } = useAppSelector(
+		state => state.auth
+	);
 
 	const {
 		register,
 		handleSubmit,
-		control,
 		formState: { errors },
 	} = useForm<RegisterFormValues>({
 		resolver: yupResolver(schema),
@@ -60,8 +70,29 @@ const Register = () => {
 	const [files, setFiles] = useState<ExtendedFile[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
+	const [uploadValidationError, setUploadValidationError] = useState<
+		string | undefined
+	>(undefined);
 
 	const isFileUploadValid = files.length >= 4;
+	const hasErrors = Object.keys(errors).length > 0;
+
+	const removeFileHandler = (fileId: string) => {
+		setFiles(files => files.filter((file, _index) => file.id !== fileId));
+	};
+
+	useEffect(() => {
+		dispatch(clearErrors());
+	}, [location, clearErrors]);
+
+	useEffect(() => {
+		if (hasErrors && !isFileUploadValid) {
+			setUploadValidationError("Please upload atleast 4 images");
+		}
+		if (isFileUploadValid) {
+			setUploadValidationError(undefined);
+		}
+	}, [hasErrors, isFileUploadValid, removeFileHandler]);
 
 	useEffect(() => {
 		return () =>
@@ -73,17 +104,21 @@ const Register = () => {
 			setFiles(previousFiles => [
 				...previousFiles,
 				...acceptedFiles.map(file =>
-					Object.assign(file, { thumbnail: URL.createObjectURL(file) })
+					Object.assign(file, {
+						thumbnail: URL.createObjectURL(file),
+						id: generateUniqueId(),
+					})
 				),
 			]);
 		}
 	}, []);
 
-	const removeFileHandler = (fileName: string) => {
-		setFiles(files => files.filter(file => file.name !== fileName));
-	};
-
 	const registerHandler = (data: RegisterFormValues) => {
+		if (!isFileUploadValid) {
+			setUploadValidationError("Please upload atleast 4 images");
+			return;
+		}
+
 		setIsLoading(true);
 		let formData = new FormData();
 		files.forEach((file, index) => {
@@ -99,8 +134,6 @@ const Register = () => {
 		dispatch(actionRegister(formData)).then(response => {
 			if (response.payload === 201) {
 				setIsRegistrationSuccess(true);
-			} else {
-				console.log(response.payload);
 			}
 			setIsLoading(false);
 		});
@@ -112,96 +145,100 @@ const Register = () => {
 
 	return (
 		<div className="w-full h-screen md:grid md:grid-cols-2">
-			<div className="relative md:bg-[url('https://res.cloudinary.com/osaretin-dev/image/upload/v1695565623/markus-spiske-wL7pwimB78Q-unsplash_lcca7c.jpg')] bg-cover bg-center h-screen">
-				<div className="absolute w-full h-full top-0 left-0 bg-black opacity-80 z-0"></div>
-				<div className="grid place-items-center h-full z-50 relative">
+			<LeftPageBanner className="md:bg-[url('https://res.cloudinary.com/osaretin-dev/image/upload/v1695565623/markus-spiske-wL7pwimB78Q-unsplash_lcca7c.jpg')]" />
+			<div className=" grid place-items-center pt-14 md:pt-0 md:overflow-y-scroll">
+				<div className=" w-full md:max-w-[400px] md:w-full px-4">
+					<h2 className="mb-8 font-poppins font-bold text-grey text-xl">
+						DON'T HAVE AN ACCOUNT
+					</h2>
+					<h2 className="mb-8 font-poppins font-bold text-grey text-sm">
+						REGISTER
+					</h2>
+					<div className="my-3">
+						{isError && errorMessage && (
+							<Info type="error" text={errorMessage} />
+						)}
+					</div>
 					<div>
-						<span className=" text-white font-bold text-6xl">
-							Cobble
-							<span className=" inline-block p-3 h-[100px] bg-error ml-2">
-								web
-							</span>
-						</span>
-						<div className="text-white text-center my-4">
-							Custom Online Marketplace Solutions
+						<div className="mb-4">
+							<TextInputField
+								id="firstname-input"
+								type="text"
+								placeholder="First Name"
+								{...(errors.firstName && { error: true })}
+								{...register("firstName")}
+								errorText={errors.firstName && errors.firstName.message}
+							/>
+						</div>
+						<div className="mb-4">
+							<TextInputField
+								id="lastname-input"
+								type="text"
+								placeholder="Last Name"
+								{...(errors.lastName && { error: true })}
+								{...register("lastName")}
+								errorText={errors.lastName && errors.lastName.message}
+							/>
+						</div>
+
+						<div className="mb-4">
+							<TextInputField
+								id="role-input"
+								type="text"
+								placeholder="Role"
+								{...(errors.role && { error: true })}
+								{...register("role")}
+								errorText={errors.role && errors.role.message}
+							/>
+						</div>
+						<div className="mb-4">
+							<TextInputField
+								id="email-input"
+								type="email"
+								placeholder="Email"
+								{...(errors.email && { error: true })}
+								{...register("email")}
+								errorText={errors.email && errors.email.message}
+							/>
+						</div>
+						<div className="mb-8">
+							<PasswordInputField
+								id="password-input"
+								placeholder="password"
+								{...(errors.password && { error: true })}
+								{...register("password")}
+								errorText={errors.password && errors.password.message}
+							/>
+						</div>
+						<div className="mb-8">
+							<DropZone
+								className="p-4"
+								onDrop={onDropFileHandler}
+								onRemove={removeFileHandler}
+								files={files}
+								multiple
+							/>
+							{uploadValidationError && (
+								<Info text={uploadValidationError} type="error" />
+							)}
 						</div>
 					</div>
-				</div>
-			</div>
-			<div className="">
-				<h2>CREATE A NEW ACCOUNT</h2>
-				<div>
-					<div className="mb-4">
-						<TextInputField
-							id="firstname-input"
-							type="text"
-							placeholder="First Name"
-							{...(errors.firstName && { error: true })}
-							{...register("firstName")}
-							errorText={errors.firstName && errors.firstName.message}
-						/>
-					</div>
-					<div className="mb-4">
-						<TextInputField
-							id="lastname-input"
-							type="text"
-							placeholder="Last Name"
-							{...(errors.lastName && { error: true })}
-							{...register("lastName")}
-							errorText={errors.lastName && errors.lastName.message}
-						/>
-					</div>
-
-					<div className="mb-4">
-						<TextInputField
-							id="role-input"
-							type="text"
-							placeholder="Role"
-							{...(errors.role && { error: true })}
-							{...register("role")}
-							errorText={errors.role && errors.role.message}
-						/>
-					</div>
-					<div className="mb-4">
-						<TextInputField
-							id="email-input"
-							type="email"
-							placeholder="Email"
-							{...(errors.email && { error: true })}
-							{...register("email")}
-							errorText={errors.email && errors.email.message}
+					<div className="my-3">
+						<Button
+							text="Register"
+							variant="primary"
+							size="compact"
+							fullWidth
+							onClick={handleSubmit(registerHandler)}
+							isLoading={isLoading || stateLoading}
+							type="submit"
 						/>
 					</div>
 					<div className="mb-8">
-						<PasswordInputField
-							id="password-input"
-							placeholder="password"
-							{...(errors.password && { error: true })}
-							{...register("password")}
-							errorText={errors.password && errors.password.message}
-						/>
+						<Link to="/login" className="text-sm underline">
+							Already registered? Login
+						</Link>
 					</div>
-					<div className="mb-8">
-						<DropZone
-							className="border bg-middle-grey p-4"
-							onDrop={onDropFileHandler}
-							onRemove={removeFileHandler}
-							files={files}
-							multiple
-						/>
-					</div>
-				</div>
-				<div className="my-3">
-					<Button
-						text="Register"
-						variant="primary"
-						size="compact"
-						fullWidth
-						onClick={handleSubmit(registerHandler)}
-						isLoading={isLoading}
-						type="submit"
-						disabled={!isFileUploadValid}
-					/>
 				</div>
 			</div>
 		</div>

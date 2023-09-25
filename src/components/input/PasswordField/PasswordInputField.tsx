@@ -48,9 +48,10 @@ const PasswordInputField = forwardRef<
 			<>
 				<div
 					className={clsx(
-						"flex h-12 rounded-sm bg-input-grey px-2",
+						"flex h-12 rounded-sm bg-input-grey px-2 border",
+						{ "border-grey": !error },
 						{ "h-12": disabled },
-						{ "border-2 border-error": error }
+						{ "border border-error": error }
 					)}>
 					<input
 						disabled={disabled}
@@ -82,7 +83,7 @@ const PasswordInputField = forwardRef<
 					</button>
 				</div>
 				{error && errorText && (
-					<span className="text-sm text-red inline-block my-1">
+					<span className="text-[0.75rem] text-error inline-block my-1">
 						{errorText}
 					</span>
 				)}

@@ -46,9 +46,10 @@ const TextInputField = forwardRef<HTMLInputElement, TextInputFieldProps>(
 			<>
 				<div
 					className={clsx(
-						"flex h-12 rounded-sm bg-input-grey  text-grey",
+						"flex h-12 rounded-sm bg-input-grey  text-grey border",
+						{ "border-grey": !error },
 						{ "h-14": disabled },
-						{ "border-2 border-error": error }
+						{ "border border-error": error }
 					)}>
 					<input
 						data-testid={`${id}-test`}
@@ -66,8 +67,8 @@ const TextInputField = forwardRef<HTMLInputElement, TextInputFieldProps>(
 						className={clsx(
 							"flex-1 border-none px-2 text-grey focus:outline-none",
 							{
-								"border-mid-gray border bg-input-grey": !error,
-								"border  border-error bg-input-grey text-error": error,
+								"border-mid-gray border-none bg-input-grey": !error,
+
 								"opacity-40": disabled,
 							},
 							className
@@ -75,7 +76,7 @@ const TextInputField = forwardRef<HTMLInputElement, TextInputFieldProps>(
 					/>
 				</div>
 				{error && errorText && (
-					<span className="text-sm text-red inline-block my-1">
+					<span className="text-[0.75rem] text-error inline-block my-1">
 						{errorText}
 					</span>
 				)}

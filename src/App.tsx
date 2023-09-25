@@ -4,7 +4,7 @@ import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Profile from "./pages/profile/Profile";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { useAppDispatch } from "./app/hooks";
 import { getAuthUser } from "./features/thunks/auth";
 
 function App() {
@@ -15,6 +15,7 @@ function App() {
 			dispatch(getAuthUser());
 		}
 	}, []);
+
 	return (
 		<>
 			<BrowserRouter>

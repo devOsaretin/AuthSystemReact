@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../features/thunks/auth";
 import TextInputField from "../../components/input/TextInput/TextInputField";
 import { useForm } from "react-hook-form";
@@ -9,7 +9,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import PasswordInputField from "../../components/input/PasswordField/PasswordInputField";
 import Button from "../../components/input/Button/Button";
 import Info from "../../components/Feedback/Info/Info";
-import FullPageSpinner from "../../components/Feedback/Spinner/FullPageSpinner";
+import { clearErrors } from "../../features/auth/authSlice";
+import LeftPageBanner from "../../components/commons/LeftPageBanner/LeftPageBanner";
 
 type LoginFormValues = {
 	email: string;
@@ -22,11 +23,16 @@ const loginSchema = yup.object().shape({
 });
 
 const Login = () => {
+	const location = useLocation();
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { isAuthenticated, isLoading, isError, errorMessage } = useAppSelector(
 		state => state.auth
 	);
+
+	useEffect(() => {
+		dispatch(clearErrors());
+	}, [location, clearErrors]);
 
 	useEffect(() => {
 		if (isAuthenticated) {
@@ -46,71 +52,62 @@ const Login = () => {
 		resolver: yupResolver(loginSchema),
 	});
 
-	if (isLoading) return <FullPageSpinner />;
-
 	return (
 		<div className="w-full h-screen md:grid md:grid-cols-2">
-			<div className="relative md:bg-[url('https://res.cloudinary.com/osaretin-dev/image/upload/v1695546844/bg_y3na05.jpg')] bg-cover bg-center h-screen">
-				<div className="absolute w-full h-full top-0 left-0 bg-black opacity-80 z-0"></div>
-				<div className="grid place-items-center h-full z-50 relative">
-					<div>
-						<span className=" text-white font-bold text-6xl">
-							Cobble
-							<span className=" inline-block p-3 h-[100px] bg-error ml-2">
-								web
-							</span>
-						</span>
-						<div className="text-white text-center my-4">
-							Custom Online Marketplace Solutions
-						</div>
+			<LeftPageBanner />
+			<div className=" grid place-items-center pt-14 md:pt-0">
+				<div className=" w-full md:max-w-[400px] md:w-full px-4">
+					<h2 className="mb-8 font-poppins font-bold text-grey text-xl">
+						WELCOME BACK
+					</h2>
+					<h2 className="mb-8 font-poppins font-bold text-grey text-sm">
+						LOGIN
+					</h2>
+					<div className="my-3">
+						{isError && errorMessage && (
+							<Info type="error" text={errorMessage} />
+						)}
 					</div>
-				</div>
-			</div>
-			<div className="">
-				<h2>LOGIN</h2>
-				<div className="mb-4">
-					<TextInputField
-						id="email-input"
-						type="email"
-						placeholder="Email"
-						{...(errors.email && { error: true })}
-						{...register("email")}
-						errorText={errors.email && errors.email.message}
-					/>
-				</div>
-				<div className="mb-8">
-					<PasswordInputField
-						id="password-input"
-						placeholder="password"
-						{...(errors.password && { error: true })}
-						{...register("password")}
-						errorText={errors.password && errors.password.message}
-					/>
-				</div>
-				<div>
-					{isError && errorMessage && <Info type="error" text={errorMessage} />}
-				</div>
+					<div className="mb-4">
+						<TextInputField
+							id="email-input"
+							type="email"
+							placeholder="Email"
+							{...(errors.email && { error: true })}
+							{...register("email")}
+							errorText={errors.email && errors.email.message}
+						/>
+					</div>
+					<div className="mb-8">
+						<PasswordInputField
+							id="password-input"
+							placeholder="password"
+							{...(errors.password && { error: true })}
+							{...register("password")}
+							errorText={errors.password && errors.password.message}
+						/>
+					</div>
 
-				<div className="my-3">
-					<Button
-						text="Sign In"
-						variant="primary"
-						size="compact"
-						fullWidth
-						onClick={handleSubmit(handleLogin)}
-						isLoading={isLoading}
-					/>
-				</div>
+					<div className="my-3">
+						<Button
+							text="Sign In"
+							variant="primary"
+							size="compact"
+							fullWidth
+							onClick={handleSubmit(handleLogin)}
+							isLoading={isLoading}
+						/>
+					</div>
 
-				<div>
-					<Button
-						text="Create an account"
-						variant="secondary"
-						size="compact"
-						fullWidth
-						onClick={() => navigate("/register")}
-						isLoading={isLoading}
-					/>
+					<div>
+						<Button
+							text="Create an account"
+							variant="secondary"
+							size="compact"
+							fullWidth
+							onClick={() => navigate("/register")}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

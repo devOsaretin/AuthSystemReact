@@ -45,7 +45,7 @@ export const getButtonClasses = (
 			"hover:border-red hover:bg-red hover:text-white hover:not-focused:ring-1 hover:not-focused:ring-inset hover:not-focused:ring-red":
 				variant === "secondary" && !isDisabled,
 			"block w-full": fullWidth,
-			"cursor-default opacity-60 ": isLoading || isDisabled,
+			"cursor-default opacity-90 ": isLoading || isDisabled,
 		},
 		className
 	);

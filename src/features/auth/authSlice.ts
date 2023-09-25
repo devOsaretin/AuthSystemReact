@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AuthUser } from "../../interfaces/authentication";
-import { getAuthUser, login } from "../thunks/auth";
+import { getAuthUser, login, register } from "../thunks/auth";
 
 const token = localStorage.getItem("token") ?? null;
 
@@ -34,6 +34,10 @@ const authSlice = createSlice({
 			state.errorMessage = undefined;
 			state.isLoading = false;
 			state.token = null;
+		},
+		clearErrors(state) {
+			state.errorMessage = undefined;
+			state.isError = false;
 		},
 	},
 
@@ -80,8 +84,27 @@ const authSlice = createSlice({
 			state.isAuthenticated = false;
 			state.errorMessage = action.payload as string;
 		});
+
+		builder.addCase(register.fulfilled, (state, action) => {
+			state.isAuthenticated = false;
+			state.token = null;
+			state.errorMessage = undefined;
+			state.isError = false;
+			state.isLoading = false;
+		});
+
+		builder.addCase(register.pending, state => {
+			state.isLoading = true;
+		});
+
+		builder.addCase(register.rejected, (state, action) => {
+			state.isLoading = false;
+			state.isError = true;
+			state.isAuthenticated = false;
+			state.errorMessage = action.payload as string;
+		});
 	},
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearErrors } = authSlice.actions;
 export default authSlice.reducer;

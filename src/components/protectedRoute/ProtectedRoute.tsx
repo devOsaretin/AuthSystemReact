@@ -2,6 +2,7 @@ import React, { FC, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getAuthUser } from "../../features/thunks/auth";
+import FullPageSpinner from "../Feedback/Spinner/FullPageSpinner";
 
 interface ProtectedRoute {
 	redirect?: string;
@@ -19,7 +20,7 @@ const ProtectedRoute: FC<ProtectedRoute> = ({ redirect, children }) => {
 	}, [isAuthenticated]);
 
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <FullPageSpinner />;
 	}
 
 	if (!isAuthenticated && !isLoading) {

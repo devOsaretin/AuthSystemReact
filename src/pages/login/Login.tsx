@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { Navigate, useNavigate } from "react-router-dom";
-import { getAuthUser, login } from "../../features/thunks/auth";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../features/thunks/auth";
 import TextInputField from "../../components/input/TextInput/TextInputField";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import PasswordInputField from "../../components/input/PasswordField/PasswordInputField";
 import Button from "../../components/input/Button/Button";
 import Info from "../../components/Feedback/Info/Info";
+import FullPageSpinner from "../../components/Feedback/Spinner/FullPageSpinner";
 
 type LoginFormValues = {
 	email: string;
@@ -45,9 +46,7 @@ const Login = () => {
 		resolver: yupResolver(loginSchema),
 	});
 
-	if (isLoading) return <h1>Loading</h1>;
-
-	//if (isAuthenticated) return <Navigate to="/profile" />;
+	if (isLoading) return <FullPageSpinner />;
 
 	return (
 		<div className="w-full h-screen md:grid md:grid-cols-2">

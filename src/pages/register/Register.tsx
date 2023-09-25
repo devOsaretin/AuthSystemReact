@@ -139,7 +139,7 @@ const Register = () => {
 		});
 	};
 
-	if (isRegistrationSuccess) {
+	if (!isRegistrationSuccess) {
 		return <RegistrationSuccess />;
 	}
 

@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import { useAppDispatch } from "./app/hooks";
 import { getAuthUser } from "./features/thunks/auth";
 import NotFound from "./pages/404/NotFound";
+import MswToggler from "./mocks/MswToggler";
 
 function App() {
 	const dispatch = useAppDispatch();
@@ -35,6 +36,7 @@ function App() {
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</BrowserRouter>
+			<MswToggler />
 		</>
 	);
 }

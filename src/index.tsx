@@ -6,6 +6,11 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 
+//MSW
+if (process.env.NODE_ENV === "development") {
+	import("./mocks/browser").catch(() => console.log("Failed to start MSW"));
+}
+
 const root = ReactDOM.createRoot(
 	document.getElementById("root") as HTMLElement
 );

@@ -6,6 +6,7 @@ import Profile from "./pages/profile/Profile";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import { useAppDispatch } from "./app/hooks";
 import { getAuthUser } from "./features/thunks/auth";
+import NotFound from "./pages/404/NotFound";
 
 function App() {
 	const dispatch = useAppDispatch();
@@ -31,6 +32,7 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
+					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</BrowserRouter>
 		</>

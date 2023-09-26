@@ -121,7 +121,7 @@ const Register = () => {
 
 		setIsLoading(true);
 		let formData = new FormData();
-		files.forEach((file, index) => {
+		files.forEach(file => {
 			formData.append("files", file, file.name);
 		});
 
@@ -139,7 +139,7 @@ const Register = () => {
 		});
 	};
 
-	if (!isRegistrationSuccess) {
+	if (isRegistrationSuccess) {
 		return <RegistrationSuccess />;
 	}
 
@@ -149,7 +149,7 @@ const Register = () => {
 			<div className=" grid place-items-center pt-14 md:pt-0 md:overflow-y-scroll">
 				<div className=" w-full md:max-w-[400px] md:w-full px-4">
 					<h2 className="mb-8 font-poppins font-bold text-grey text-xl">
-						DON'T HAVE AN ACCOUNT
+						DON'T HAVE AN ACCOUNT?
 					</h2>
 					<h2 className="mb-8 font-poppins font-bold text-grey text-sm">
 						REGISTER
@@ -246,5 +246,3 @@ const Register = () => {
 };
 
 export default Register;
-
-//#e4b70c

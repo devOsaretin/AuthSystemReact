@@ -119,6 +119,10 @@ const Login = () => {
 							onClick={() => navigate("/register")}
 						/>
 					</div>
+					<div className="text-grey text-xs my-12">
+						&copy; 2023 Built by Osaretin Igbinobaro (
+						<span className="font-bold">mail@osaretin.dev</span>)
+					</div>
 				</div>
 			</div>
 		</div>

@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { logout } from "../../features/auth/authSlice";
 import FullPageSpinner from "../../components/Feedback/Spinner/FullPageSpinner";
 import { SignOut } from "phosphor-react";
+import ImageCarousel from "../../components/ImageCarousel/ImageCorousel";
 
 const Profile = () => {
 	const dispatch = useAppDispatch();
@@ -33,8 +34,9 @@ const Profile = () => {
 					{authUser && authUser.fullName}
 				</div>
 				{authUser?.photos.length && (
-					<div>
+					<div className="flex flex-col items-center">
 						<p className="my-2 text-sm font-extrabold font-poppins">PHOTOS</p>
+						<ImageCarousel photos={authUser.photos} />
 					</div>
 				)}
 			</div>

@@ -1,0 +1,42 @@
+export const mockUser = {
+	id: 5,
+	firstName: "Mock",
+	lastName: "User",
+	email: "mock@email.com",
+	role: "admin",
+	active: true,
+	createdAt: "2023-09-23T11:30:50.416Z",
+	updatedAt: "2023-09-23T11:30:50.416Z",
+	avatar: "https://eu.ui-avatars.com/api/?name=Mock+User&size=250",
+	photos: [
+		{
+			id: 17,
+			name: "lorenzo-herrera-p0j-mE6mGo4-unsplash.jpg",
+			url: "https://cw-recruitment-tests.s3.eu-west-1.amazonaws.com/1695472247841lorenzo-herrera-p0j-mE6mGo4-unsplash.jpg",
+			createdAt: "2023-09-23T11:30:50.459Z",
+			updatedAt: "2023-09-23T11:30:50.459Z",
+		},
+		{
+			id: 18,
+			name: "1694512470014lorenzo-herrera-p0j-mE6mGo4-unsplash.jpg",
+			url: "https://cw-recruitment-tests.s3.eu-west-1.amazonaws.com/16954722478381694512470014lorenzo-herrera-p0j-mE6mGo4-unsplash.jpg",
+			createdAt: "2023-09-23T11:30:50.483Z",
+			updatedAt: "2023-09-23T11:30:50.483Z",
+		},
+		{
+			id: 19,
+			name: "nikita-katsevich-QXDJGPZTwxs-unsplash.jpg",
+			url: "https://cw-recruitment-tests.s3.eu-west-1.amazonaws.com/1695472247842nikita-katsevich-QXDJGPZTwxs-unsplash.jpg",
+			createdAt: "2023-09-23T11:30:50.494Z",
+			updatedAt: "2023-09-23T11:30:50.494Z",
+		},
+		{
+			id: 20,
+			name: "adi-goldstein-EUsVwEOsblE-unsplash.jpg",
+			url: "https://cw-recruitment-tests.s3.eu-west-1.amazonaws.com/1695472247841adi-goldstein-EUsVwEOsblE-unsplash.jpg",
+			createdAt: "2023-09-23T11:30:50.502Z",
+			updatedAt: "2023-09-23T11:30:50.502Z",
+		},
+	],
+	fullName: "Mock User",
+};

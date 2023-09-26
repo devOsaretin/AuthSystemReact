@@ -22,7 +22,7 @@ const MswToggler = () => {
 
 	return (
 		<div className="fixed bottom-4 right-4  flex items-center gap-2">
-			<span className="text-grey">
+			<span className="text-grey font-poppins">
 				{mockingEnabled ? "Mocking ✅" : "Mocking ❌"}
 			</span>
 			<Switch

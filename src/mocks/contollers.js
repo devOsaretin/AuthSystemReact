@@ -1,32 +1,25 @@
-export const login = (req, res, ctx) => {
-	// Persist user's authentication in the session
-	sessionStorage.setItem("is-authenticated", "true");
+import { mockUser } from "./mockData/authUser";
 
-	return res(
-		// Respond with a 200 status code
-		ctx.status(200)
-	);
-};
+const mockToken =
+	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
-export const getAuthUser = (req, res, ctx) => {
-	// Check if the user is authenticated in this session
-	const isAuthenticated = sessionStorage.getItem("is-authenticated");
+export const mockLoginController = (req, res, ctx) => {
+	const { email, password } = req.body;
 
-	if (!isAuthenticated) {
-		// If not authenticated, respond with a 403 error
+	if (email === "mock@email.com" && password === "password123") {
+		return res(ctx.status(200), ctx.json({ token: mockToken }));
+	} else {
 		return res(
-			ctx.status(403),
-			ctx.json({
-				errorMessage: "Not authorized",
-			})
+			ctx.status(401),
+			ctx.json({ message: "Invalid credentials", error: "Unauthorized" })
 		);
 	}
+};
 
-	// If authenticated, return a mocked user details
-	return res(
-		ctx.status(200),
-		ctx.json({
-			username: "admin",
-		})
-	);
+export const mockGetAuthUserController = (req, res, ctx) => {
+	return res(ctx.status(200), ctx.json(mockUser));
+};
+
+export const mockRegisterController = (req, res, ctx) => {
+	return res(ctx.status(201));
 };

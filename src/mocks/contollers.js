@@ -10,6 +10,7 @@ export const mockLoginController = (req, res, ctx) => {
 		return res(ctx.status(200), ctx.json({ token: mockToken }));
 	} else {
 		return res(
+			ctx.delay(250),
 			ctx.status(401),
 			ctx.json({ message: "Invalid credentials", error: "Unauthorized" })
 		);
@@ -17,9 +18,20 @@ export const mockLoginController = (req, res, ctx) => {
 };
 
 export const mockGetAuthUserController = (req, res, ctx) => {
-	return res(ctx.status(200), ctx.json(mockUser));
+	return res(ctx.delay(250), ctx.status(200), ctx.json(mockUser));
 };
 
 export const mockRegisterController = (req, res, ctx) => {
-	return res(ctx.status(201));
+	if (req.body.email === "mock@email.com") {
+		return res(
+			ctx.delay(250),
+			ctx.status(400),
+			ctx.json({
+				message: "Email is already taken",
+				error: "Bad Request",
+				statusCode: 400,
+			})
+		);
+	}
+	return res(ctx.delay(500), ctx.status(201));
 };

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../../features/thunks/auth";
@@ -11,6 +11,7 @@ import Button from "../../components/input/Button/Button";
 import Info from "../../components/Feedback/Info/Info";
 import { clearErrors } from "../../features/auth/authSlice";
 import LeftPageBanner from "../../components/commons/LeftPageBanner/LeftPageBanner";
+import FullPageSpinner from "../../components/Feedback/Spinner/FullPageSpinner";
 
 type LoginFormValues = {
 	email: string;
@@ -26,9 +27,14 @@ const Login = () => {
 	const location = useLocation();
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
-	const { isAuthenticated, isLoading, isError, errorMessage } = useAppSelector(
-		state => state.auth
-	);
+
+	const [isLoading, setIsLoading] = useState(false);
+	const {
+		isAuthenticated,
+		isLoading: storeLoading,
+		isError,
+		errorMessage,
+	} = useAppSelector(state => state.auth);
 
 	useEffect(() => {
 		dispatch(clearErrors());
@@ -41,7 +47,10 @@ const Login = () => {
 	}, [isAuthenticated]);
 
 	const handleLogin = async (data: LoginFormValues) => {
-		dispatch(login({ email: data.email, password: data.password }));
+		setIsLoading(true);
+		dispatch(login({ email: data.email, password: data.password })).finally(
+			() => setIsLoading(false)
+		);
 	};
 
 	const {
@@ -51,6 +60,8 @@ const Login = () => {
 	} = useForm<LoginFormValues>({
 		resolver: yupResolver(loginSchema),
 	});
+
+	if (storeLoading) return <FullPageSpinner />;
 
 	return (
 		<div className="w-full h-screen md:grid md:grid-cols-2">

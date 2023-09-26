@@ -74,9 +74,9 @@ const authSlice = createSlice({
 			state.isLoading = false;
 		});
 
-		builder.addCase(login.pending, state => {
-			state.isLoading = true;
-		});
+		// builder.addCase(login.pending, state => {
+		// 	state.isLoading = true;
+		// });
 
 		builder.addCase(login.rejected, (state, action) => {
 			state.isLoading = false;
